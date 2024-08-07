@@ -4,6 +4,7 @@ import FlagDisplay from '../components/FlagDisplay';
 import PlayerInput from '../components/PlayerInput';
 import Timer from '../components/Timer';
 import HelpButton from '../components/HelpButton';
+import SkipButton from '../components/SkipButton';
 import PlayerNameInput from '../components/PlayerNameInput';
 import GameSummary from '../components/GameSummary';
 import Link from 'next/link';
@@ -20,6 +21,7 @@ const Home = () => {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [playerName, setPlayerName] = useState('');
+  const [hint, setHint] = useState('');
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -35,7 +37,9 @@ const Home = () => {
 
   const selectRandomCountry = () => {
     const randomIndex = Math.floor(Math.random() * countries.length);
-    setSelectedCountry(countries[randomIndex]);
+    const country = countries[randomIndex];
+    setSelectedCountry(country);
+    setHint('_'.repeat(country.name.length));
   };
 
   const handleNameAndDurationSubmit = (name, duration) => {
@@ -51,7 +55,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (timeLeft === 0 && isGameStarted) {
+    if (timeLeft <= 0 && isGameStarted) {
       setIsGameOver(true);
       setIsGameStarted(false);
 
@@ -76,6 +80,7 @@ const Home = () => {
       {isGameStarted ? (
         <>
           {selectedCountry && <FlagDisplay flagUrl={selectedCountry.flag} />}
+          <p>{hint}</p>
           <PlayerInput
             selectedCountry={selectedCountry}
             setScore={setScore}
@@ -84,7 +89,23 @@ const Home = () => {
             setSelectedCountry={selectRandomCountry}
           />
           <Timer timeLeft={timeLeft} setTimeLeft={setTimeLeft} />
-          <HelpButton timeLeft={timeLeft} setTimeLeft={setTimeLeft} />
+          <div className={styles.buttonContainer}>
+            <HelpButton
+              timeLeft={timeLeft}
+              setTimeLeft={setTimeLeft}
+              hint={hint}
+              setHint={setHint}
+              originalName={selectedCountry ? selectedCountry.name : ''}
+              setSelectedCountry={selectRandomCountry}
+              setTotalAnswers={setTotalAnswers}
+            />
+            <SkipButton
+              timeLeft={timeLeft}
+              setTimeLeft={setTimeLeft}
+              setSelectedCountry={selectRandomCountry}
+              setTotalAnswers={setTotalAnswers}
+            />
+          </div>
           <div className={styles['score-info']}>
             <p>Score: {score}</p>
             <p>Correct Answers: {correctAnswers}/{totalAnswers}</p>

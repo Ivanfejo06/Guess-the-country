@@ -142,6 +142,7 @@
   }
   
   .helpButton {
+    margin: 10px;
     padding: 10px 20px;
     font-size: 1rem;
     border: none;
@@ -171,3 +172,23 @@
     font-size: 1.2rem;
     margin: 10px 0;
   }  
+
+
+  .skipButton {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #d32a1e;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+  }
+  
+  .skipButton:hover {
+    background-color: #a52218;
+  }
+
+  .buttonContainer{
+    display: flex;
+  }
